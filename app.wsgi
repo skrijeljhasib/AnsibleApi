@@ -1,8 +1,9 @@
 #!/usr/bin/python2.7
+
 try:
+    import json
     import bottle
-    from bottle import post, request
-    application = bottle.default_app()
+    from bottle import Bottle, post, request, response
     import ConfigParser
     config = ConfigParser.ConfigParser()
     import os
@@ -13,14 +14,21 @@ try:
     os.environ['ANSIBLE_CONFIG'] = config.get('DEFAULT', 'ANSIBLE_CONFIG')
     import api
 except (ImportWarning, ImportError, Exception), i:
-    print '{"result": "' + str(i) + '"}'
+    results_callback = json.dumps(str(i))
 
-@post('/post_data')
+application = bottle.default_app()
+
+@application.hook('after_request')
+def enable_cors():
+    response.headers['Access-Control-Allow-Origin'] = config.get('DEFAULT', 'ACCESS_CONTROL_ALLOW_ORIGIN')
+    response.headers['Access-Control-Allow-Methods'] = 'POST'
+
+@application.post('/post_data')
 def post_data():
     try:
         run = api.Run()
-        results_callback = '{"result": "'+run.start(request.body.read())+'"}'
+        results_callback = json.dumps(run.start(request.body.read()))
     except Exception, ex1:
-        results_callback = '{"result": "'+str(ex1)+'"}'
+        results_callback = json.dumps(str(ex1))
 
-    print results_callback
+    return results_callback

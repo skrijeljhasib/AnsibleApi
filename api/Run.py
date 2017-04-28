@@ -3,7 +3,7 @@ try:
     import os
     import ConfigParser
     config = ConfigParser.ConfigParser()
-    config.read(os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'config'))+'/app.ini')
+    config.read(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config'))+'/app.ini')
     from collections import namedtuple
     from ansible.parsing.dataloader import DataLoader
     from ansible.vars import VariableManager
@@ -50,7 +50,7 @@ class Run:
                           passwords=passwords,
                           loader=loader,
                           variable_manager=variable_manager,
-                          stdout_callback=results_callback,  # Use our custom callback instead of the ``default`` callback plugin
+                          stdout_callback=results_callback,
                 )
                 tqm.run(play)
 
@@ -58,4 +58,4 @@ class Run:
                 if tqm is not None:
                     tqm.cleanup()
 
-        return results_callback.json
+        return results_callback.data

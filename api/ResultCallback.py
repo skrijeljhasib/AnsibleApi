@@ -1,16 +1,16 @@
 #!/usr/bin/python2.7
 try:
-    import json
     from ansible.plugins.callback import CallbackBase
-except ImportError, ie:
-    print str(ie)
+except (CallbackBase, ImportError), cie:
+    data = str(cie)
+
 
 class ResultCallback(CallbackBase):
 
-    json = ''
+    data = ''
 
     def v2_runner_on_failed(self, result, ignore_errors=False):
-        self.json = json.dumps(result._result)
+        self.data = result._result
 
     def v2_runner_on_ok(self, result, **kwargs):
-        self.json = json.dumps(result._result)
+        self.data = result._result
