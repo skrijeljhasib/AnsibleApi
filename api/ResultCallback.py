@@ -2,7 +2,7 @@
 try:
     from ansible.plugins.callback import CallbackBase
 except (CallbackBase, ImportError), cie:
-    data = str(cie)
+    print str(cie)
 
 
 class ResultCallback(CallbackBase):
