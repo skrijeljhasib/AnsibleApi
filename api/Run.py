@@ -1,3 +1,4 @@
+#!/usr/bin/python2.7
 try:
     import json
     import os
@@ -12,32 +13,39 @@ try:
     from ansible.executor.task_queue_manager import TaskQueueManager
     from ResultCallback import ResultCallback
 except (ImportWarning, ImportError, Exception), i:
-    print str(i)
+    print json.dumps(str(i))
 
 
 class Run:
-    def start(self, json_data):
 
-        Options = namedtuple('Options',
-                             ['connection', 'module_path', 'forks', 'become', 'become_method', 'become_user', 'check'])
-        # initialize needed objects
-        variable_manager = VariableManager()
-        loader = DataLoader()
-        options = Options(connection='ssh', module_path='/path/to/mymodules', forks=100, become=False,
-                          become_method='', become_user='', check=False)
-        passwords = dict(vault_pass='secret')
+    result = dict()
+
+    def start(self, json_data):
 
         # Instantiate our ResultCallback for handling results as they come in
         results_callback = ResultCallback()
 
-        # create inventory and pass to var manager
-        inventory = Inventory(loader=loader, variable_manager=variable_manager, host_list=config.get('DEFAULT', 'HOST_LIST'))
-        variable_manager.set_inventory(inventory)
-
         # create play with tasks
         play_sources = json.loads(json_data)
 
+        i = 0
         for play_source in play_sources:
+
+            Options = namedtuple('Options',
+                                 ['connection', 'module_path', 'forks', 'become', 'become_method', 'become_user',
+                                  'check'])
+
+            # initialize needed objects
+            variable_manager = VariableManager()
+            loader = DataLoader()
+            options = Options(connection='local', module_path='/path/to/mymodules', forks=100, become=None,
+                              become_method=None, become_user=None, check=False)
+            passwords = dict(vault_pass='secret')
+
+            # create inventory and pass to var manager
+            inventory = Inventory(loader=loader, variable_manager=variable_manager,
+                                  host_list=config.get('DEFAULT', 'HOST_LIST'))
+            variable_manager.set_inventory(inventory)
 
             play = Play().load(play_source, variable_manager=variable_manager, loader=loader)
 
@@ -54,8 +62,11 @@ class Run:
                 )
                 tqm.run(play)
 
+                self.result.update({i: results_callback.data})
+                i += 1
+
             finally:
                 if tqm is not None:
                     tqm.cleanup()
 
-        return results_callback.data
+        return self.result
