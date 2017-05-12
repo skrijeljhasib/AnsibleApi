@@ -1,12 +1,12 @@
 # AnsibleApi
 
 The purpose of this API is to receive a JSON string (Ansible Playbooks) as a POST Request from a client to execute Ansible Tasks.
-Look at <a href="https://github.com/skrijeljhasib/AnsibleWeb" target="_blank">AnsibleWeb</a> for a frontend Application.
+Look at [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) for a frontend Application.
 
 ## Motivation
 
 As a trainee at Flash Europe International, I was engaged during 3 months to create this project with AnsibleWeb.
-The <a href="https://github.com/skrijeljhasib/AnsibleWeb" target="_blank">AnsibleWeb</a> needs the AnsibleApi to install a virtual machine with packages and a little configuration in openstack clouds.
+The [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) needs the AnsibleApi to install a virtual machine with packages and a little configuration in openstack clouds.
 
 ## Getting started
 
@@ -64,7 +64,8 @@ you have to copy the file to the new directory and change the settings in the ap
 
 ## Test
 
-Use <a href="http:https://www.getpostman.com/" target="_blank">Postman</a>:
+Use [Postman](https://www.getpostman.com/):
+
 * URL: **IP-Address or Domain-Name to AnsibleApi**/post_data
 * METHOD: POST
 * BODY RAW JSON: 
