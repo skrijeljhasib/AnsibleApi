@@ -61,6 +61,37 @@ AddHandler cgi-script .py
 If you want to change the path to the config/ansible.cfg file,
 you have to copy the file to the new directory and change the settings in the app.ini file.
 
+
+## Test
+
+Use [Postman](https://www.getpostman.com/):
+
+* URL: **IP-Address or Domain-Name to AnsibleApi**/post_data
+* METHOD: POST
+* JSON: 
+```
+[
+    {
+       "name": "Install Package(s)",
+       "hosts": "localhost",
+       "become": "true",
+       "become_method": "sudo",
+       "become_user": "root",
+       "gather_facts": "false",
+       "tasks": [
+                   {
+                     "name": "Install Packages",
+                     "apt": "name={{ item }} state=present",
+                     "with_items": [
+                                     "postfix",
+                                     "munin-node"
+                     ]
+                   }
+       ]
+    }
+]
+```
+
 ## Contributors
 
 
