@@ -68,7 +68,7 @@ Use [Postman](https://www.getpostman.com/):
 
 * URL: **IP-Address or Domain-Name to AnsibleApi**/post_data
 * METHOD: POST
-* JSON: 
+* BODY RAW JSON: 
 ```
 [
     {
