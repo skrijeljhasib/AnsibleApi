@@ -78,6 +78,12 @@ Use [Postman](https://www.getpostman.com/):
        "become_method": "sudo",
        "become_user": "root",
        "gather_facts": "false",
+       "pre_tasks": [
+                      {
+                        "name": "Install Python",
+                        "raw": "apt -y install aptitude python-apt"
+                      }
+       ],
        "tasks": [
                    {
                      "name": "Install Packages",
