@@ -6,7 +6,7 @@ Look at [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) for a frontend
 ## Motivation
 
 As a trainee at Flash Europe International, I was engaged during 3 months to create this project with AnsibleWeb.
-The [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) needs the AnsibleApi to install a virtual machine with packages and a little configuration in openstack clouds.
+The [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) needs the AnsibleApi to install a virtual machine with packages and to configure the new machine in the openstack cloud.
 
 ## Getting started
 
