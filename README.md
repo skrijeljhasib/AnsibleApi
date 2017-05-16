@@ -16,12 +16,14 @@ The [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) needs the AnsibleA
 sudo add-apt-repository ppa:ansible/ansible
 sudo apt-get update
 sudo apt-get upgrade
+sudo apt-get install ansible
 sudo apt-get install apache2
+sudo apt-get install libapache2-mod-wsgi
 sudo apt-get install python-bottle
 sudo apt-get install python-shade
-sudo a2enmod cgi
+sudo apt-get install mysql-server
+sudo a2enmod wsgi
 sudo a2enmod rewrite
-sudo apt install ansible
 ```
 
 ### Installation
@@ -56,11 +58,9 @@ WSGIScriptAlias / /var/www/html/AnsibleApi/app.wsgi
 AddHandler cgi-script .py
 ```
 
-### Configuration (Optional)
+### Configuration
 
-If you want to change the path to the config/ansible.cfg file,
-you have to copy the file to the new directory and change the settings in the app.ini file.
-
+Look at the config/app.ini file.
 
 ## Test
 
