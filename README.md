@@ -1,6 +1,6 @@
 # AnsibleApi
 
-The purpose of this API is to receive a JSON string (Ansible Playbooks) as a POST Request from a client to execute Ansible Tasks.
+The purpose of this API is to to play Ansible Playbooks. It receives a JSON string as a POST Request to execute Ansible Tasks.
 Look at [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) for a frontend Application.
 
 ## Motivation
@@ -9,6 +9,10 @@ As a trainee at Flash Europe International, I was engaged during 3 months to cre
 The [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) needs the AnsibleApi to install a virtual machine with packages and to configure the new machine in the openstack cloud.
 
 ## Getting started
+
+AnsibleApi has been tested with ubuntu 16.04, apache2, python3.2 and ansible2.3.
+It may work with alternative versions but is not currently documented.
+Only Nova Openstack provider is created so far. New providers will be added in the feature. 
 
 ### Prerequisites
 
@@ -28,9 +32,9 @@ sudo a2enmod rewrite
 
 ### Installation
 
-Download and extract the project. Place it in your Apache DocumentRoot folder.
+Download and extract the project. Place it in your Apache2 DocumentRoot folder.
 
-
+Nova Requirement :
 You have to create a ssh key and add it with nova to your openstack cloud (In the project folder):
 ```
 cd config
@@ -40,6 +44,7 @@ sudo -u www-data ssh-keygen -t rsa
 sudo nova --os-username username --os-password password --os-project-name projectname --os-auth-url authurl --os-region-name regionname --os-project-id projectid keypair-add --pub-key yourpublickey
 ```
 
+Apache Requirement :
 Change Permissions (In the project folder):
 ```
 cd config
@@ -47,7 +52,7 @@ sudo chgrp www-data hosts
 sudo chgrp www-data keys
 ```
 
-Add this to your Apache Configuration file:
+Apache Configuration file example :
 
 ```
 WSGIScriptAlias / /var/www/html/AnsibleApi/app.wsgi
