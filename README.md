@@ -23,11 +23,8 @@ sudo apt-get upgrade
 sudo apt-get install ansible
 sudo apt-get install apache2
 sudo apt-get install libapache2-mod-wsgi
-sudo apt-get install libapache2-mod-php
-sudo apt-get install php-mysql
 sudo apt-get install python-bottle
 sudo apt-get install python-shade
-sudo apt-get install mysql-server
 sudo a2enmod wsgi
 sudo a2enmod rewrite
 sudo a2enmod headers
@@ -111,4 +108,4 @@ Use [Postman](https://www.getpostman.com/):
 
 
 ## License
-
+The GNU General Public License v3.0 - GPL-3.0
