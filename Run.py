@@ -4,7 +4,7 @@ try:
     import os
     import ConfigParser
     config = ConfigParser.ConfigParser()
-    config.read(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config'))+'/app.ini')
+    config.read(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config'))+'/app.ini')
     from collections import namedtuple
     from ansible.parsing.dataloader import DataLoader
     from ansible.vars import VariableManager
@@ -19,28 +19,28 @@ except (ImportWarning, ImportError, Exception), i:
 class Run:
 
     result = dict()
+    # Instantiate our ResultCallback for handling results as they come in
 
     def start(self, json_data):
-
-        # Instantiate our ResultCallback for handling results as they come in
-        results_callback = ResultCallback()
 
         # create play with tasks
         play_sources = json.loads(json_data)
 
+        Options = namedtuple('Options',
+                             ['module_path', 'forks', 'become', 'become_method', 'become_user',
+                              'check'])
+
+        # initialize needed objects
+        variable_manager = VariableManager()
+        loader = DataLoader()
+        options = Options(module_path='/path/to/mymodules', forks=100, become=None,
+                          become_method=None, become_user=None, check=False)
+        passwords = dict(vault_pass='secret')
+
+        results_callback = ResultCallback()
+
         i = 0
         for play_source in play_sources:
-
-            Options = namedtuple('Options',
-                                 ['connection', 'module_path', 'forks', 'become', 'become_method', 'become_user',
-                                  'check'])
-
-            # initialize needed objects
-            variable_manager = VariableManager()
-            loader = DataLoader()
-            options = Options(connection='local', module_path='/path/to/mymodules', forks=100, become=None,
-                              become_method=None, become_user=None, check=False)
-            passwords = dict(vault_pass='secret')
 
             # create inventory and pass to var manager
             inventory = Inventory(loader=loader, variable_manager=variable_manager,
