@@ -23,18 +23,21 @@ sudo apt-get upgrade
 sudo apt-get install ansible
 sudo apt-get install apache2
 sudo apt-get install libapache2-mod-wsgi
+sudo apt-get install libapache2-mod-php
+sudo apt-get install php-mysql
 sudo apt-get install python-bottle
 sudo apt-get install python-shade
 sudo apt-get install mysql-server
 sudo a2enmod wsgi
 sudo a2enmod rewrite
+sudo a2enmod headers
 ```
 
 ### Installation
 
 Download and extract the project. Place it in your Apache2 DocumentRoot folder.
 
-Nova Requirement :
+#### Nova Requirement :
 You have to create a ssh key and add it with nova to your openstack cloud (In the project folder):
 ```
 cd config
@@ -44,9 +47,10 @@ sudo -u www-data ssh-keygen -t rsa
 sudo nova --os-username username --os-password password --os-project-name projectname --os-auth-url authurl --os-region-name regionname --os-project-id projectid keypair-add --pub-key yourpublickey
 ```
 
-Apache Requirement :
+#### Apache Requirement :
 Change Permissions (In the project folder):
 ```
+sudo chgrp www-data config/
 cd config
 sudo chgrp www-data hosts
 sudo chgrp www-data keys
@@ -55,17 +59,17 @@ sudo chgrp www-data keys
 Apache Configuration file example :
 
 ```
-WSGIScriptAlias / /var/www/html/AnsibleApi/app.wsgi
-<Directory /var/www/html/AnsibleApi >
-        Options +ExecCGI
-        DirectoryIndex index.py
-</Directory>
-AddHandler cgi-script .py
+WSGIScriptAlias / /var/www/ansibleapi/app.wsgi
 ```
 
 ### Configuration
 
 Look at the config/app.ini file.
+
+Look at config/ansible.cfg file.
+
+* ssh_args = -o UserKnownHostsFile=/var/www/html/AnsibleApi/config/keys/known_hosts
+* private_key_file = /var/www/ansibleapi/active/config/keys/id_rsa
 
 ## Test
 
