@@ -18,17 +18,12 @@ except (ImportWarning, ImportError, Exception), i:
 
 class Run:
 
-    result = dict()
-    # Instantiate our ResultCallback for handling results as they come in
-
     def start(self, json_data):
 
         # create play with tasks
-        play_sources = json.loads(json_data)
+        play_source = json.loads(json_data)
 
-        Options = namedtuple('Options',
-                             ['module_path', 'forks', 'become', 'become_method', 'become_user',
-                              'check'])
+        Options = namedtuple('Options', ['module_path', 'forks', 'become', 'become_method', 'become_user', 'check'])
 
         # initialize needed objects
         variable_manager = VariableManager()
@@ -37,36 +32,30 @@ class Run:
                           become_method=None, become_user=None, check=False)
         passwords = dict(vault_pass='secret')
 
+        # Instantiate our ResultCallback for handling results as they come in
         results_callback = ResultCallback()
 
-        i = 0
-        for play_source in play_sources:
+        # create inventory and pass to var manager
+        inventory = Inventory(loader=loader, variable_manager=variable_manager, host_list=config.get('DEFAULT', 'HOST_LIST'))
+        variable_manager.set_inventory(inventory)
 
-            # create inventory and pass to var manager
-            inventory = Inventory(loader=loader, variable_manager=variable_manager,
-                                  host_list=config.get('DEFAULT', 'HOST_LIST'))
-            variable_manager.set_inventory(inventory)
+        play = Play().load(play_source, variable_manager=variable_manager, loader=loader)
 
-            play = Play().load(play_source, variable_manager=variable_manager, loader=loader)
+        # actually run it
+        tqm = None
+        try:
+            tqm = TaskQueueManager(
+                      inventory=inventory,
+                      options=options,
+                      passwords=passwords,
+                      loader=loader,
+                      variable_manager=variable_manager,
+                      stdout_callback=results_callback,
+            )
+            tqm.run(play)
 
-            # actually run it
-            tqm = None
-            try:
-                tqm = TaskQueueManager(
-                          inventory=inventory,
-                          options=options,
-                          passwords=passwords,
-                          loader=loader,
-                          variable_manager=variable_manager,
-                          stdout_callback=results_callback,
-                )
-                tqm.run(play)
+        finally:
+            if tqm is not None:
+                tqm.cleanup()
 
-                self.result.update({i: results_callback.data})
-                i += 1
-
-            finally:
-                if tqm is not None:
-                    tqm.cleanup()
-
-        return self.result
+        return results_callback.data
