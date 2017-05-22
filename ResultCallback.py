@@ -30,19 +30,7 @@ class ResultCallback(CallbackBase):
     def v2_runner_item_on_ok(self, result):
         self.data = result._result
 
-    def _clean_results(self, result, task_name):
-        self.data = result._result
-
-    def _handle_exception(self, result):
-        self.data = result._result
-
     def v2_playbook_on_notify(self, result, handler):
-        self.data = result._result
-
-    def _process_items(self, result):
-        self.data = result._result
-
-    def _get_item(self, result):
         self.data = result._result
 
     def v2_runner_on_skipped(self, result):
@@ -61,9 +49,6 @@ class ResultCallback(CallbackBase):
         self.data = result._result
 
     def v2_runner_item_on_failed(self, result):
-        self.data = result._result
-
-    def _dump_results(self, result, indent=None, sort_keys=True, keep_invocation=False):
         self.data = result._result
 
     def v2_runner_item_on_skipped(self, result):
