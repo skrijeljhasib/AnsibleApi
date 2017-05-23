@@ -26,13 +26,12 @@ sudo apt-get install libapache2-mod-wsgi
 sudo apt-get install python-bottle
 sudo apt-get install python-shade
 sudo a2enmod wsgi
-sudo a2enmod rewrite
 sudo a2enmod headers
 ```
 
 ### Installation
 
-Download and extract the project. Place it in your Apache2 DocumentRoot folder.
+Download the project and place it in your Apache2 DocumentRoot folder.
 
 #### Nova Requirement :
 You have to create a ssh key and add it with nova to your openstack cloud (In the project folder):
@@ -47,10 +46,10 @@ sudo nova --os-username username --os-password password --os-project-name projec
 #### Apache Requirement :
 Change Permissions (In the project folder):
 ```
-sudo chgrp www-data config/
+sudo chgrp www-data config
 cd config
 sudo chgrp www-data hosts
-sudo chgrp www-data keys
+sudo chown -R www-data keys
 ```
 
 Apache Configuration file example :
@@ -76,7 +75,7 @@ Use [Postman](https://www.getpostman.com/):
 * METHOD: POST
 * BODY RAW JSON: 
 ```
-[
+
     {
        "name": "Install Package(s)",
        "hosts": "localhost",
@@ -101,11 +100,12 @@ Use [Postman](https://www.getpostman.com/):
                    }
        ]
     }
-]
+
 ```
 
 ## Contributors
 
+* Skrijelj Hasib
 
 ## License
 The GNU General Public License v3.0 - GPL-3.0
