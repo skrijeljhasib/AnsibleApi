@@ -1,3 +1,2 @@
 .idea/
-config/keys/
-config/hosts
+config/local/*

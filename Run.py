@@ -4,7 +4,10 @@ try:
     import os
     import ConfigParser
     config = ConfigParser.ConfigParser()
-    config.read(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config'))+'/app.ini')
+    if os.path.isfile(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config')) + '/local/app.ini'):
+        config.read(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config')) + '/local/app.ini')
+    else:
+        config.read(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config')) + '/app.ini')
     from collections import namedtuple
     from ansible.parsing.dataloader import DataLoader
     from ansible.vars import VariableManager

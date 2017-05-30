@@ -36,8 +36,7 @@ Download the project and place it in your Apache2 DocumentRoot folder.
 #### Nova Requirement :
 You have to create a ssh key and add it with nova to your openstack cloud (In the project folder):
 ```
-cd config
-mkdir keys
+cd config/local
 cd keys
 sudo -u www-data ssh-keygen -t rsa
 sudo nova --os-username username --os-password password --os-project-name projectname --os-auth-url authurl --os-region-name regionname --os-project-id projectid keypair-add --pub-key yourpublickey
@@ -46,13 +45,13 @@ sudo nova --os-username username --os-password password --os-project-name projec
 #### Apache Requirement :
 Change Permissions (In the project folder):
 ```
-sudo chgrp www-data config
-cd config
+sudo chgrp www-data config/local
+cd config/local
 sudo chgrp www-data hosts
 sudo chown -R www-data keys
 ```
 
-Apache Configuration file example :
+Apache Configuration file example:
 
 ```
 WSGIScriptAlias / /var/www/ansibleapi/app.wsgi
@@ -60,12 +59,12 @@ WSGIScriptAlias / /var/www/ansibleapi/app.wsgi
 
 ### Configuration
 
-Look at the config/app.ini file.
+Look at the config/local/app.ini file.
 
-Look at config/ansible.cfg file.
+Look at config/local/ansible.cfg file.
 
-* ssh_args = -o UserKnownHostsFile=/var/www/html/AnsibleApi/config/keys/known_hosts
-* private_key_file = /var/www/ansibleapi/active/config/keys/id_rsa
+* ssh_args = -o UserKnownHostsFile=/var/www/html/AnsibleApi/config/local/keys/known_hosts
+* private_key_file = /var/www/html/AnsibleApi/config/local/keys/id_rsa
 
 ## Test
 
