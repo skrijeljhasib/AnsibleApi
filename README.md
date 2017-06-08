@@ -1,6 +1,6 @@
 # AnsibleApi
 
-The purpose of this API is to to play Ansible Playbooks. It receives a JSON string as a POST Request to execute Ansible Tasks.
+The purpose of this API is to play Ansible Playbooks. It receives a JSON string as a POST Request to execute Ansible Tasks.
 Look at [AnsibleWeb](https://github.com/skrijeljhasib/AnsibleWeb) for a frontend Application.
 
 ## Motivation
