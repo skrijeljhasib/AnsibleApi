@@ -44,8 +44,10 @@ WSGIScriptAlias / /var/www/html/AnsibleApi-x.y.z/app.wsgi
 Change Permissions (In the project folder):
 ```
 sudo chgrp www-data config/local
+sudo chmod g+w config/local
 cd config/local
 sudo chgrp www-data hosts
+sudo chmod g+w hosts
 sudo mkdir keys
 sudo chown -R www-data keys
 ```
@@ -56,9 +58,11 @@ You have to create a ssh key and add it with nova to your openstack cloud (In th
 cd config/local/keys
 sudo -u www-data ssh-keygen -t rsa
 Enter file in which to save the key: (path-example: /var/www/html/AnsibleApi-x.y.z/config/local/keys/id_rsa)
+
 sudo touch known_hosts
 sudo chown www-data known_hosts
 sudo chgrp www-data known_hosts
+
 nova --os-username username --os-password password --os-project-name projectname --os-auth-url authurl --os-region-name regionname --os-project-id projectid keypair-add --pub-key id_rsa nameofkey
 ```
 
