@@ -33,28 +33,30 @@ sudo a2enmod headers
 
 Download the project and place it in your Apache2 DocumentRoot folder.
 
-#### Nova Requirement :
-You have to create a ssh key and add it with nova to your openstack cloud (In the project folder):
+#### Apache Requirement :
+
+Apache Configuration file example:
 ```
-cd config/local
-cd keys
-sudo -u www-data ssh-keygen -t rsa
-sudo nova --os-username username --os-password password --os-project-name projectname --os-auth-url authurl --os-region-name regionname --os-project-id projectid keypair-add --pub-key yourpublickey
+DocumentRoot /var/www/html/AnsibleApi-x.y.z/
+WSGIScriptAlias / /var/www/html/AnsibleApi-x.y.z/app.wsgi
 ```
 
-#### Apache Requirement :
 Change Permissions (In the project folder):
 ```
 sudo chgrp www-data config/local
 cd config/local
 sudo chgrp www-data hosts
+sudo mkdir keys
 sudo chown -R www-data keys
 ```
 
-Apache Configuration file example:
-
+#### Nova Requirement :
+You have to create a ssh key and add it with nova to your openstack cloud (In the project folder):
 ```
-WSGIScriptAlias / /var/www/ansibleapi/app.wsgi
+cd config/local/keys
+sudo -u www-data ssh-keygen -t rsa
+Enter file in which to save the key: (path-example: /var/www/html/AnsibleApi-x.y.z/config/local/keys/id_rsa)
+nova --os-username username --os-password password --os-project-name projectname --os-auth-url authurl --os-region-name regionname --os-project-id projectid keypair-add --pub-key id_rsa nameofkey
 ```
 
 ### Configuration
@@ -63,39 +65,28 @@ Look at the config/local/app.ini file.
 
 Look at config/local/ansible.cfg file.
 
-* ssh_args = -o UserKnownHostsFile=/var/www/html/AnsibleApi/config/local/keys/known_hosts
-* private_key_file = /var/www/html/AnsibleApi/config/local/keys/id_rsa
+* ssh_args = -o UserKnownHostsFile=/var/www/html/AnsibleApi-x.y.z/config/local/keys/known_hosts
+* private_key_file = /var/www/html/AnsibleApi-x.y.z/config/local/keys/id_rsa
+
+### Finally 
+
+* sudo service apache2 restart
 
 ## Test
 
 Use [Postman](https://www.getpostman.com/):
 
-* URL: **IP-Address or Domain-Name to AnsibleApi**/post_data
+* URL: **IP-Address or Domain-Name to AnsibleApi with portnumber**/post_data
 * METHOD: POST
 * BODY RAW JSON: 
 ```
-
     {
-       "name": "Install Package(s)",
+       "name": "Test Shell",
        "hosts": "localhost",
-       "become": "true",
-       "become_method": "sudo",
-       "become_user": "root",
        "gather_facts": "false",
-       "pre_tasks": [
-                      {
-                        "name": "Install Python",
-                        "raw": "apt -y install aptitude python-apt"
-                      }
-       ],
        "tasks": [
                    {
-                     "name": "Install Packages",
-                     "apt": "name={{ item }} state=present",
-                     "with_items": [
-                                     "postfix",
-                                     "munin-node"
-                     ]
+                     "shell": "ls -l"
                    }
        ]
     }
