@@ -21,10 +21,12 @@ except (ImportWarning, ImportError, Exception), i:
 
 class Run:
 
+    response = dict()
+
     def start(self, json_data):
 
         # create play with tasks
-        play_source = json.loads(json_data)
+        play_sources = json.loads(json_data)
 
         Options = namedtuple('Options', ['module_path', 'forks', 'become', 'become_method', 'become_user', 'check'])
 
@@ -42,23 +44,27 @@ class Run:
         inventory = Inventory(loader=loader, variable_manager=variable_manager, host_list=config.get('DEFAULT', 'HOST_LIST'))
         variable_manager.set_inventory(inventory)
 
-        play = Play().load(play_source, variable_manager=variable_manager, loader=loader)
+        for play_source in play_sources:
 
-        # actually run it
-        tqm = None
-        try:
-            tqm = TaskQueueManager(
-                      inventory=inventory,
-                      options=options,
-                      passwords=passwords,
-                      loader=loader,
-                      variable_manager=variable_manager,
-                      stdout_callback=results_callback,
-            )
-            tqm.run(play)
+            play = Play().load(play_source, variable_manager=variable_manager, loader=loader)
 
-        finally:
-            if tqm is not None:
-                tqm.cleanup()
+            # actually run it
+            tqm = None
+            try:
+                tqm = TaskQueueManager(
+                          inventory=inventory,
+                          options=options,
+                          passwords=passwords,
+                          loader=loader,
+                          variable_manager=variable_manager,
+                          stdout_callback=results_callback,
+                )
+                tqm.run(play)
 
-        return results_callback.data
+                self.response.update({play_source['name']+'_response': results_callback.data})
+
+            finally:
+                if tqm is not None:
+                    tqm.cleanup()
+
+        return self.response
