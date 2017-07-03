@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 try:
     import json
+    import mysql.connector
     import os
     import ConfigParser
     config = ConfigParser.ConfigParser()
@@ -22,7 +23,27 @@ except (ImportWarning, ImportError, Exception), i:
 class Run:
 
     def start(self, json_data):
+        
+        configMysql = ConfigParser.ConfigParser()
+        configMysql.read(config.get('DEFAULT','DB_CONNECTION_FILE'))
 
+        db = mysql.connector.connect(host=configMysql.get('INVENTORY','host'),
+            user=configMysql.get('INVENTORY','user'),
+            passwd=configMysql.get('INVENTORY','pass'),
+            db=configMysql.get('INVENTORY','dbname'),
+            charset='utf8mb4')
+
+        cursor=db.cursor()
+        get_hosts="select name from hosts"
+        get_ips="select ip from hosts"
+        cursor.execute(get_hosts)
+        hosts=[item[0] for item in cursor.fetchall()]
+        cursor.execute(get_ips)
+        ips=[item[0] for item in cursor.fetchall()]
+
+        data = {}
+
+        data["hosts"] = hosts + ips
         # create play with tasks
         play_source = json.loads(json_data)
 
@@ -39,8 +60,7 @@ class Run:
         results_callback = ResultCallback()
 
         # create inventory and pass to var manager
-        inventory = Inventory(loader=loader, variable_manager=variable_manager, host_list=config.get('DEFAULT', 'HOST_LIST'))
-        variable_manager.set_inventory(inventory)
+        inventory = Inventory(loader=loader, variable_manager=variable_manager, host_list=data["hosts"])
 
         play = Play().load(play_source, variable_manager=variable_manager, loader=loader)
 
